@@ -1,5 +1,5 @@
 <div align="center">
-  <h2>inception</h2>
+  <h2>inception - 42 project</h2>
   <img src="./img/inception.png"/>
   <br>
 </div>
