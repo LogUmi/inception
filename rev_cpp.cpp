@@ -1,4 +1,5 @@
 #include <iostream> // std::cin, cout, cerr, clog
+#include <ostream>	// std::ostream
 #include <string>	// std::string, .empty(), .c_str(), .size(), .clear(), .append, .replace, .substr, .swap
 #include <cctype>	// toupper(char)..., tolower, isspace, isalnum, isalpha, iscntrl, isgraph, islower
 #include <ctime>	// var clock_t, var size_t, var time_t, struct tm*, clock(), mktime, difftime, time(0), ctime
@@ -7,6 +8,10 @@
 #include <climits>	// INT_MIN, INT_MAX, CHAR_BIT, LONG_MIN, LONG_MAX ... 
 #include <climits> 	// FLT_MIN, FLT_MAX, DBL_MIN, DBL_MAX, LDBL_MIN, LDBL_MAX
 #include <cmath>	// exp, log, cos, acos, sin, asin, sqrt, pow, round, floor, ceil, fabs
+#include <cstdlib>	// srand(time(NULL)), rand()%XX
+#include <cstddef>	// size_t, NULL
+#include <exception>// std::exception, bad_alloc, bad_cast,	bad_exception, bad_function_call, bad_typeid, bad_weak_ptr, ios_base::failure, logic_error, runtime_error
+#include <stdexcept>// logic_error: domain_error, invalid_argument, length_error, out_of_range / runtime_error: range_error, overflow_error, underflow_error	U
 
 int	get_str( std::string &input, std::string str )
 {
@@ -306,3 +311,70 @@ void highFivesGuys(void)
 		
 */
 
+/*	casting
+
+	static_cast<void>(var);
+	reinterpret_cast<uintptr_t>(ptr);
+
+	try
+	{
+		A& a = dynamic_cast<A&>(p);
+		static_cast<void>(a);
+		std::cout << "A says identify&" << std::endl;
+		return ;
+	}
+	catch (const std::exception & e){}
+		
+*/
+
+/***** templates 1 ******/
+
+#ifndef WHATEVER_HPP
+# define WHATEVER_HPP
+
+template < typename T >
+const T &	min( const T & a, const T & b )
+{
+	return (a < b ? a : b);
+}
+#endif
+
+int main( void )
+{
+	int a = 2;
+	int b = 3;
+	std::cout << "min( a, b ) = " << ::min( a, b ) << std::endl;
+}
+
+/***** templates 2 ******/
+#ifndef ARRAY_HPP
+# define ARRAY_HPP
+
+# include <stdexcept>
+
+template < typename T >
+class Array
+{
+	private:
+		T*				data;
+		unsigned int	n;
+	public:
+		Array		( void );
+		Array		( unsigned int n );
+		Array		( const Array & other);
+		~Array		( void );
+		
+		Array<T> &	operator=( const Array & other );
+		T &			operator[]( const unsigned int idx );
+		const T & 	operator[]( const unsigned int idx ) const;
+		
+		unsigned int 	size( void ) const;
+};
+# include "Array.tpp"
+#endif
+//fichier .tpp
+template < typename T >
+Array<T>::Array( void )
+:	data(0),
+	n(0)
+{}
