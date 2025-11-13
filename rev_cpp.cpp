@@ -66,24 +66,34 @@ void	_displayTimestamp( void )
 */
 
 /*
-		Fixed&		operator=( const Fixed& f );
-		bool		operator>( const Fixed& f ) const;
-		bool		operator<( const Fixed& f ) const;
-		bool		operator>=( const Fixed& f ) const;
-		bool		operator<=( const Fixed& f ) const;
-		bool		operator==( const Fixed& f ) const;
-		bool		operator!=( const Fixed& f ) const;
-		Fixed		operator+( const Fixed& f );
-		Fixed		operator-( const Fixed& f );
-		Fixed		operator*( const Fixed& f );
-		Fixed		operator/( const Fixed& f );
-		Fixed&		operator++();
-		Fixed&		operator--();
-		Fixed		operator++(int); {fixed temp(*this); this->value++; return (temp);}
-		Fixed		operator--(int); {fixed temp(*this); this->value--; return (temp);}
-		int&		operator[](int i);
-		const int& 	operator[](int i) const;
-		Fixed		operator-() const; {return (this->value * -1);}
+	Class Fixed
+	{	
+		public;
+			Fixed&		operator=( const Fixed& f );
+			bool		operator>( const Fixed& f ) const;
+			bool		operator<( const Fixed& f ) const;
+			bool		operator>=( const Fixed& f ) const;
+			bool		operator<=( const Fixed& f ) const;
+			bool		operator==( const Fixed& f ) const;
+			bool		operator!=( const Fixed& f ) const;
+			Fixed		operator+( const Fixed& f );
+			Fixed		operator-( const Fixed& f );
+			Fixed		operator*( const Fixed& f );
+			Fixed		operator/( const Fixed& f );
+			Fixed&		operator++();
+			Fixed&		operator--();
+			Fixed		operator++(int); {fixed temp(*this); this->value++; return (temp);}
+			Fixed		operator--(int); {fixed temp(*this); this->value--; return (temp);}
+			int&		operator[](int i);
+			const int& 	operator[](int i) const;
+			Fixed		operator-() const; {return (this->value * -1);}
+
+			static Fixed&		min(Fixed & a, Fixed & b);
+			static const Fixed&	min(const Fixed & a, const Fixed & b);
+			static Fixed&		max(Fixed & a, Fixed & b);
+			static const Fixed&	max(const Fixed & a, const Fixed & b);
+			/* Methodes static car depend d'aucun objet -> appelees par Fixed::min(a, b);
+}
 */
 
 void highFivesGuys(void)
@@ -171,6 +181,13 @@ void highFivesGuys(void)
 		public:
 			virtual	~Brain( void );
 	}
+	
+
+	const Dog* a = new Dog();
+	b = *(dog*)a; // cast de a en dog* (Dog*)a (supprime const) puis dereference Dog&
+
+	Objet.Mehode1().Methode2() 	peut exister si Methode1 renvoi un objet alors
+								la Methode2 de l'objet renvoye sera executee
 */
 
 /* Classe abstraite - une methode = 0
@@ -217,25 +234,25 @@ void highFivesGuys(void)
 /* Interface ou abstraite pure - toute methode = 0
 
 	class Character : public ICharacter
-{
-	private:
-		std::string	name;
-		AMateria*	inv[4];
-		AMateria*	ground[100];
+	{
+		private:
+			std::string	name;
+			AMateria*	inv[4];
+			AMateria*	ground[100];
 		
-	public:
+		public:
 							Character( void );
 							Character( std::string const & name);
 							Character( const Character& am );
-		virtual 			~Character( void );
-		Character & 		operator=( Character const & am );
+			virtual 		~Character( void );
+			Character & 	operator=( Character const & am );
 		
-		virtual std::string const &		getName() const;
-		virtual void 					equip(AMateria* m);
-		virtual void 					unequip(int idx);
-		virtual void 					use(int idx, ICharacter& target);
-		AMateria const *				getInv(int const idx) const;
-		bool							checkInventory( void ) const;
+			virtual std::string const &		getName() const;
+			virtual void 					equip(AMateria* m);
+			virtual void 					unequip(int idx);
+			virtual void 					use(int idx, ICharacter& target);
+			AMateria const *				getInv(int const idx) const;
+			bool							checkInventory( void ) const;
 	...
 	class ICharacter
 	{
@@ -249,8 +266,43 @@ void highFivesGuys(void)
 	std::ostream &	operator<<(std::ostream& os, const Character& am);
 */
 
+/*Exceptions et try/catch
 
-/**************** static a verifier pour cpp02 ex02 ****************/
-/**************** dog b = *(dog*)j avec const aninal* j = new dog();****************/
-/**************** b.gotAnIdea direct ?****************/
+	class Bureaucrat
+	{
+		public:
+	
+		
+		class GradeTooHighException: public std::exception
+		{
+			public:
+				virtual const char* what() const throw();	
+		};
+	...
+	const char* Bureaucrat::GradeTooHighException::what() const throw()
+	{
+		return ("The grade is to high (< 1)");
+	}
+
+	void	Bureaucrat::upGrade()
+	{
+		this->grade--;
+		if (this->grade < 1)
+			throw GradeTooHighException();
+		else if (this->grade > 150)
+			throw GradeTooLowException();
+	}
+	...
+	{
+		try
+	   	{
+			burct.upGrade();
+			std::cout << burct << std::endl;
+	   	}
+	   	catch(const Bureaucrat::GradeTooHighException& e)
+	   	{
+	        	std::cerr << burct << ": upGrade error: " << e.what() << std::endl;
+	   	}
+		
+*/
 
