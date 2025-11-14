@@ -2,16 +2,26 @@
 #include <ostream>	// std::ostream
 #include <string>	// std::string, .empty(), .c_str(), .size(), .clear(), .append, .replace, .substr, .swap
 #include <cctype>	// toupper(char)..., tolower, isspace, isalnum, isalpha, iscntrl, isgraph, islower
-#include <ctime>	// var clock_t, var size_t, var time_t, struct tm*, clock(), mktime, difftime, time(0), ctime
+#include <ctime>	// var clock_t, var size_t, var time_t, struct tm*, clock(), mktime(tm), difftime, time(0), ctime
 #include <iomanip>	// std::setfill, setw, setbase, setiosflags, resetiosflag
 #include <fstream>	// std::ifstream, ofstream, .open, .close(), .eof(), .fail(), .bad()
 #include <climits>	// INT_MIN, INT_MAX, CHAR_BIT, LONG_MIN, LONG_MAX ... 
 #include <climits> 	// FLT_MIN, FLT_MAX, DBL_MIN, DBL_MAX, LDBL_MIN, LDBL_MAX
 #include <cmath>	// exp, log, cos, acos, sin, asin, sqrt, pow, round, floor, ceil, fabs
-#include <cstdlib>	// srand(time(NULL)), rand()%XX
+#include <cstdlib>	// srand(time(NULL)), rand()%XX, strtod, atoi, itoa
 #include <cstddef>	// size_t, NULL
 #include <exception>// std::exception, bad_alloc, bad_cast,	bad_exception, bad_function_call, bad_typeid, bad_weak_ptr, ios_base::failure, logic_error, runtime_error
 #include <stdexcept>// logic_error: domain_error, invalid_argument, length_error, out_of_range / runtime_error: range_error, overflow_error, underflow_error	U
+#include <algorithm>// find, equal, sort, reverse, lower_bound, min
+#include <vector>
+#include <deque>
+#include <list>
+#include <stack>
+#include <array>
+#include <iterator>	// distance
+#include <limits>	// std::numeric_limits<T>::min()
+#include <utility>	// std::pair< int, int>, std::make_pair( v1, v2 )
+#include <cstring>	// memset,
 
 int	get_str( std::string &input, std::string str )
 {
@@ -91,7 +101,8 @@ void	_displayTimestamp( void )
 			Fixed		operator--(int); {fixed temp(*this); this->value--; return (temp);}
 			int&		operator[](int i);
 			const int& 	operator[](int i) const;
-			Fixed		operator-() const; {return (this->value * -1);}
+			Vect2		operator-() const {return Vect2(-x, -y);
+    }
 
 			static Fixed&		min(Fixed & a, Fixed & b);
 			static const Fixed&	min(const Fixed & a, const Fixed & b);
@@ -378,3 +389,115 @@ Array<T>::Array( void )
 :	data(0),
 	n(0)
 {}
+
+/***** templates 3 ******/
+#ifndef MUTANTSTACK_HPP
+# define MUTANTSTACK_HPP
+
+#include <stack>
+#include <deque>
+#include <iterator>
+
+template <typename T>
+class MutantStack: public std::stack<T>
+{
+	private:
+
+	public:
+						MutantStack ( void ){};
+						MutantStack ( const MutantStack & other ): std::stack<T>(other.c){};
+						~MutantStack ( void ){};
+		MutantStack &	operator=( MutantStack other )
+		{
+			std::swap(this->c, other.c);
+			return (*this);
+		};
+
+		typedef typename std::stack<T>::container_type::iterator					iterator;
+		typedef typename std::stack<T>::container_type::const_iterator			const_iterator;
+		typedef typename std::stack<T>::container_type::reverse_iterator			reverse_iterator;
+		typedef typename std::stack<T>::container_type::const_reverse_iterator	const_reverse_iterator;
+
+		iterator				begin( void ) { return (this->c.begin()); };
+		iterator				end( void ) { return(this->c.end()); };
+		const_iterator			begin( void ) const { return (this->c.cbegin()); };
+		const_iterator			end( void ) const { return(this->c.cend()); };
+		reverse_iterator		rbegin( void ) { return (this->c.rbegin()); };
+		reverse_iterator		rend( void ) { return(this->c.rend()); };
+		const_reverse_iterator	rbegin( void ) const { return (this->c.crbegin()); };
+		const_reverse_iterator	rend( void ) const { return(this->c.crend()); };
+};
+#endif
+
+/***** treatfile ******/
+
+void	treat_file( std::ifstream & ifs, bool type, BitcoinExchange & btc )
+{
+	std::string	str = "";
+	std::string	result = "";
+	int			i = 0;
+	while (std::getline( ifs, result ))
+	{
+		str = str + result;
+		if (ifs.eof() && !ifs.fail())
+			break ;
+		else if (ifs.eof() && ifs.fail())
+			break ;
+		else if (ifs.fail())
+			throw std::runtime_error("ERROR: Logical error : failed to read (FAIL) file ");
+		else if (ifs.bad())
+			std::cerr 	<< "ERROR: Stream fatal error (BAD) on file " << std::endl;
+		str.erase(std::remove_if(str.begin(), str.end(), isspace), str.end());
+		if ( i == 0 )
+		{
+			i++;
+			if (str != "date,exchange_rate" && str != "date|value")
+				throw std::runtime_error("Error: wrong format header in file ");
+		}
+		else if (type == true)
+			btc.line_integration( str );
+		else
+			btc.seek_line( str );
+		str.clear();
+	}
+	if (i == 0 && ifs.eof() && ifs.fail())
+		throw std::runtime_error("Error: empty file ");	
+}
+
+/*
+
+struct tm
+
+Member	Type	Meaning	Range
+tm_sec	int	seconds after the minute	0-61*
+tm_min	int	minutes after the hour	0-59
+tm_hour	int	hours since midnight	0-23
+tm_mday	int	day of the month	1-31
+tm_mon	int	months since January	0-11
+tm_year	int	years since 1900	
+tm_wday	int	days since Sunday	0-6
+tm_yday	int	days since January 1	0-365
+tm_isdst	int	Daylight Saving Time flag	
+
+double 	m_us = 1e6 * static_cast<double>(mstop - mstart) / CLOCKS_PER_SEC;
+
+std::deque<int>::iterator pos = std::lower_bound(dM.begin() + lft_bound
+								, dM.begin() + rgt_bound, dPairs[i].second);
+	j = pos - dM.begin();
+				dM.insert(pos, dPairs[i].second);
+
+string conversion
+
+atof	Convert string to double (function)
+atoi	Convert string to integer (function)
+atol	Convert string to long integer (function)
+atoll	Convert string to long long integer (function)
+strtod	Convert string to double (function)
+strtof	Convert string to float (function)
+strtol	Convert string to long integer (function)
+strtold	Convert string to long double (function)
+strtoll	Convert string to long long integer (function)
+strtoul	Convert string to unsigned long integer (function)
+strtoull	Convert string to unsigned long long integer (function)
+
+*/
