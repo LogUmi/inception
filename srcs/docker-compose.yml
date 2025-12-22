@@ -1,0 +1,163 @@
+
+services:
+  mariadb:
+    build: ./requirements/mariadb
+    container_name: mariadb
+    env_file:
+      - .env
+    secrets:
+      - mysql_root_password
+      - mysql_user_password
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - inception
+    healthcheck:
+      test: ["CMD-SHELL", "mysql -h 127.0.0.1 -u$MYSQL_USER -p$$(cat /run/secrets/mysql_user_password) -e 'SELECT 1' $MYSQL_DATABASE >/dev/null 2>&1 || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    restart: unless-stopped
+
+  wordpress:
+    build: ./requirements/wordpress
+    container_name: wordpress
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    env_file:
+      - .env
+    secrets:
+      - wp_admin_password
+      - wp_user_password
+      - mysql_user_password
+    volumes:
+      - wordpress_data:/var/www/html
+    networks:
+      - inception
+    healthcheck:
+      test: ["CMD", "sh", "-c", "[ -d /run/php ]"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    restart: on-failure
+
+  nginx:
+    build: ./requirements/nginx
+    container_name: nginx
+    depends_on:
+      wordpress:
+        condition: service_healthy
+    ports:
+      - "443:443"
+    env_file:
+      - .env
+    volumes:
+      - wordpress_data:/var/www/html
+    networks:
+      - inception
+    restart: always
+
+  redis:
+    build: ./requirements/bonus/redis
+    container_name: redis
+    networks:
+      - inception
+    restart: unless-stopped
+
+  ftp:
+    build: ./requirements/bonus/ftp
+    container_name: ftp
+    env_file:
+      - .env
+    secrets:
+      - ftp_password
+    volumes:
+      - wordpress_data:/var/www/html
+    networks:
+      - inception
+    ports:
+      - "21:21"
+      - "21100-21110:21100-21110"
+    restart: unless-stopped
+
+  adminer:
+    build: ./requirements/bonus/adminer
+    container_name: adminer
+    env_file:
+      - .env
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    networks:
+      - inception
+    expose:
+      - "9001"
+    restart: always
+
+  backup:
+    build: ./requirements/bonus/backup
+    container_name: backup
+    env_file:
+      - .env
+    secrets:
+      - mysql_user_password
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      wordpress:
+        condition: service_healthy
+    volumes:
+      - wordpress_data:/var/www/html:rw
+      - mariadb_data:/var/lib/mysql:rw
+      - backups_data:/backups
+    networks:
+      - inception
+    restart: unless-stopped
+
+  cv:
+    build: ./requirements/bonus/cv
+    container_name: cv
+    networks:
+      - inception
+    restart: unless-stopped
+
+volumes:
+  mariadb_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/lgerard/data/mariadb
+  wordpress_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/lgerard/data/wordpress
+  backups_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/lgerard/data/backups
+
+networks:
+  inception:
+    driver: bridge
+
+secrets:
+  mysql_root_password:
+    file: ../secrets/mysql_root_password.txt
+  mysql_user_password:
+    file: ../secrets/mysql_user_password.txt
+  wp_admin_password:
+    file: ../secrets/wp_admin_password.txt
+  wp_user_password:
+    file: ../secrets/wp_user_password.txt
+  ftp_password:
+    file: ../secrets/ftp_password.txt
