@@ -135,6 +135,7 @@ For more information please read additional documents: README42.md, USER_DOC.md 
 ```
 inception/
  ├─ en.subject.pdf
+ ├── LICENSE
  ├─ Makefile
  ├─ README.md
  ├─ README42.md

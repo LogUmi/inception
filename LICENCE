@@ -1,0 +1,61 @@
+MIT License
+
+Copyright (c) 2026 Loïc Gérard
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+----------------------------------------------------------------
+
+Third-Party Components Notice
+
+This project makes use of third-party software and technologies, including but
+not limited to:
+
+- Docker® and Docker Compose®
+- NGINX®
+- MariaDB®
+- WordPress®
+- Redis®
+- Adminer®
+
+These components are not redistributed as source code in this repository and
+remain under their respective licenses and trademarks.
+
+The Docker images built in this project are based on official base images
+provided by their respective maintainers. Each third-party component is
+subject to its own license terms, which must be consulted separately.
+
+Docker® is a registered trademark of Docker, Inc.
+WordPress® is a registered trademark of the WordPress Foundation.
+NGINX® is a registered trademark of F5, Inc.
+MariaDB® is a registered trademark of MariaDB Corporation Ab.
+Redis® is a registered trademark of Redis Ltd.
+
+This project itself is not affiliated with nor endorsed by any of the above
+companies.
+
+----------------------------------------------------------------
+
+Educational Notice (42 School)
+
+This repository was created as part of the 42 School curriculum.
+It is intended for educational purposes only.
+
+Students are strongly discouraged from copying this work directly.
+Writing your own implementation is essential for learning.
