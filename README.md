@@ -204,31 +204,31 @@ inception/
 
 Wordpress:
 
-<img src="./img/wp.png"/><br>
+<img src="./img/wp.png" style="border: 2px solid black;"/><br>
 
-<img src="./img/wp1.png"/><br><br>
+<img src="./img/wp1.png" style="border: 2px solid black;"/><br><br>
 
 Redis:
 
-<img src="./img/redis.png"/><br><br>
+<img src="./img/redis.png" style="border: 2px solid black;"/><br><br>
 
 Adminer:
 
-<img src="./img/adminer1.png"/><br>
+<img src="./img/adminer1.png" style="border: 2px solid black;"/><br>
 
-<img src="./img/adminer2.png"/><br><br>
+<img src="./img/adminer2.png" style="border: 2px solid black;"/><br><br>
 
 Static page:
 
-<img src="./img/page.png"/><br><br>
+<img src="./img/page.png" style="border: 2px solid black;"/><br><br>
 
 Ftp:
 
-<img src="./img/ftp.png"/><br><br>
+<img src="./img/ftp.png" style="border: 2px solid black;"/><br><br>
 
 Backup:
 
-<img src="./img/backup.png"/><br>
+<img src="./img/backup.png" style="border: 2px solid black;"/><br>
 
 ---
 
