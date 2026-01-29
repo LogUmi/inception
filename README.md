@@ -21,6 +21,7 @@
 - [Installation](#-installation)
 - [Usage](#-usage)
 - [Project Structure](#-project-structure)
+- [Examples](#-examples)
 - [Roadmap](#-roadmap)
 - [Credits](#-credits)
 - [License](#-license)
@@ -142,6 +143,7 @@ inception/
  ├─ USER_DOC.md
  ├─ DEV_DOC.md
  ├─ secrets/
+ │    ├─ credential.txt
  │    ├─ ftp_password.txt
  │    ├─ mysql_root_password.txt
  │    ├─ mysql_user_password.txt
@@ -195,6 +197,38 @@ inception/
         	 └─ tools/
             	 └─ entrypoint.sh
 ```
+
+---
+
+## 🔎 Examples
+
+Wordpress:
+
+<img src="./img/wp.png"/><br>
+
+<img src="./img/wp1.png"/><br><br>
+
+Redis:
+
+<img src="./img/redis.png"/><br><br>
+
+Adminer:
+
+<img src="./img/adminer1.png"/><br>
+
+<img src="./img/adminer2.png"/><br><br>
+
+Static page:
+
+<img src="./img/page.png"/><br><br>
+
+Ftp:
+
+<img src="./img/ftp.png"/><br><br>
+
+Backup:
+
+<img src="./img/backup.png"/><br>
 
 ---
 
